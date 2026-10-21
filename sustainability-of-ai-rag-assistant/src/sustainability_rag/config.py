@@ -2,6 +2,7 @@ from pathlib import Path
 
 # Project root is two levels up from this file: <root>/src/sustainability_rag/config.py
 DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "markdown"
+SOURCE_METADATA_PATH = Path(__file__).resolve().parents[2] / "data" / "metadata" / "sources.json"
 TOP_K = 5
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
 

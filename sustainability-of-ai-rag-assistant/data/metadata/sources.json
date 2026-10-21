@@ -1,0 +1,334 @@
+[
+  {
+    "id": "S1",
+    "filename": "alpine_2026_AI_indirect_emissions.md",
+    "type": "article-journal",
+    "title": "AI-driven productivity gains enable more CO2 emissions than they avoid in a global energy-economy model",
+    "author": [
+      {
+        "given": "Will",
+        "family": "Alpine"
+      },
+      {
+        "given": "Nathan",
+        "family": "Geldner"
+      },
+      {
+        "given": "Holly",
+        "family": "Alpine"
+      },
+      {
+        "given": "Maksym G.",
+        "family": "Chepeliev"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "container-title": "npj Climate Action",
+    "volume": "5",
+    "number": "71",
+    "DOI": "10.1038/s44168-026-00411-0",
+    "URL": "https://doi.org/10.1038/s44168-026-00411-0"
+  },
+  {
+    "id": "S2",
+    "filename": "luccioni_2021_carbon_footprint_of_bloom.md",
+    "type": "manuscript",
+    "title": "Estimating the Carbon Footprint of BLOOM, a 176B Parameter Language Model",
+    "author": [
+      {
+        "given": "Alexandra Sasha",
+        "family": "Luccioni"
+      },
+      {
+        "given": "Sylvain",
+        "family": "Viguier"
+      },
+      {
+        "given": "Anne-Laure",
+        "family": "Ligozat"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2022,
+          11,
+          3
+        ]
+      ]
+    },
+    "container-title": "arXiv",
+    "number": "2211.02001",
+    "genre": "Preprint",
+    "URL": "https://arxiv.org/abs/2211.02001"
+  },
+  {
+    "id": "S3",
+    "filename": "luccioni_2024_power_hungry_processing.md",
+    "type": "paper-conference",
+    "title": "Power Hungry Processing: Watts Driving the Cost of AI Deployment?",
+    "author": [
+      {
+        "given": "Alexandra Sasha",
+        "family": "Luccioni"
+      },
+      {
+        "given": "Yacine",
+        "family": "Jernite"
+      },
+      {
+        "given": "Emma",
+        "family": "Strubell"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "container-title": "Proceedings of the 2024 ACM Conference on Fairness, Accountability, and Transparency",
+    "event-title": "ACM FAccT '24",
+    "DOI": "10.1145/3630106.3658542",
+    "URL": "https://doi.org/10.1145/3630106.3658542"
+  },
+  {
+    "id": "S4",
+    "filename": "olivetti_2024_climate_implications_gen_ai.md",
+    "type": "report",
+    "title": "The Climate and Sustainability Implications of Generative AI",
+    "author": [
+      {
+        "given": "Noman",
+        "family": "Bashir"
+      },
+      {
+        "given": "Priya",
+        "family": "Donti"
+      },
+      {
+        "given": "James",
+        "family": "Cuff"
+      },
+      {
+        "given": "Sydney",
+        "family": "Sroka"
+      },
+      {
+        "given": "Marija",
+        "family": "Ilic"
+      },
+      {
+        "given": "Vivienne",
+        "family": "Sze"
+      },
+      {
+        "given": "Christina",
+        "family": "Delimitrou"
+      },
+      {
+        "given": "Elsa",
+        "family": "Olivetti"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2024,
+          3,
+          27
+        ]
+      ]
+    },
+    "container-title": "An MIT Exploration of Generative AI: From Novel Chemicals to Opera",
+    "publisher": "Massachusetts Institute of Technology",
+    "genre": "Position paper",
+    "URL": "https://mit-genai.pubpub.org/pub/8ulgrckc"
+  },
+  {
+    "id": "S5",
+    "filename": "oviedo_2026_energy_use_of_ai_inference.md",
+    "type": "article-journal",
+    "title": "Energy use of AI inference, efficiency pathways, and test-time scaling",
+    "author": [
+      {
+        "given": "Felipe",
+        "family": "Oviedo"
+      },
+      {
+        "given": "Fiodar",
+        "family": "Kazhamiaka"
+      },
+      {
+        "given": "Esha",
+        "family": "Choukse"
+      },
+      {
+        "given": "Allen",
+        "family": "Kim"
+      },
+      {
+        "given": "Amy",
+        "family": "Luers"
+      },
+      {
+        "given": "Melanie",
+        "family": "Nakagawa"
+      },
+      {
+        "given": "Ricardo",
+        "family": "Bianchini"
+      },
+      {
+        "given": "Juan M.",
+        "family": "Lavista Ferres"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2026,
+          4,
+          22
+        ]
+      ]
+    },
+    "container-title": "Joule",
+    "volume": "10",
+    "number": "102430",
+    "publisher": "Cell Press",
+    "DOI": "10.1016/j.joule.2026.102430",
+    "URL": "https://doi.org/10.1016/j.joule.2026.102430"
+  },
+  {
+    "id": "S6",
+    "filename": "strubell_2019_energy_policy_deep_learning_nlp.md",
+    "type": "paper-conference",
+    "title": "Energy and Policy Considerations for Deep Learning in NLP",
+    "author": [
+      {
+        "given": "Emma",
+        "family": "Strubell"
+      },
+      {
+        "given": "Ananya",
+        "family": "Ganesh"
+      },
+      {
+        "given": "Andrew",
+        "family": "McCallum"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "container-title": "Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics",
+    "event-title": "ACL 2019",
+    "event-place": "Florence, Italy",
+    "page": "3645-3650"
+  },
+  {
+    "id": "S7",
+    "filename": "watershed_ghg_emissions_ai_framework.md",
+    "type": "report",
+    "title": "Estimating GHG Emissions from AI Use: Framework for Corporate-Level Measurement",
+    "author": [
+      {
+        "given": "John",
+        "family": "Bistline"
+      }
+    ],
+    "contributor": [
+      {
+        "given": "Shaena",
+        "family": "Ulissi"
+      },
+      {
+        "given": "Steven J.",
+        "family": "Davis"
+      },
+      {
+        "given": "Jonathan",
+        "family": "Glidden"
+      },
+      {
+        "given": "James",
+        "family": "Joyce"
+      },
+      {
+        "given": "Mo",
+        "family": "Li"
+      },
+      {
+        "given": "Jackson",
+        "family": "Mohsenin"
+      },
+      {
+        "given": "Sangwon",
+        "family": "Suh"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2026
+        ]
+      ]
+    },
+    "publisher": "Watershed",
+    "genre": "White paper"
+  },
+  {
+    "id": "S8",
+    "filename": "xiao_net_zero_pathways_ai_servers.md",
+    "type": "article-journal",
+    "title": "Environmental impact and net-zero pathways for sustainable artificial intelligence servers in the USA",
+    "author": [
+      {
+        "given": "Tianqi",
+        "family": "Xiao"
+      },
+      {
+        "given": "Francesco",
+        "family": "Fuso Nerini"
+      },
+      {
+        "given": "H. Damon",
+        "family": "Matthews"
+      },
+      {
+        "given": "Massimo",
+        "family": "Tavoni"
+      },
+      {
+        "given": "Fengqi",
+        "family": "You"
+      }
+    ],
+    "issued": {
+      "date-parts": [
+        [
+          2025,
+          11,
+          10
+        ]
+      ]
+    },
+    "container-title": "Nature Sustainability",
+    "volume": "8",
+    "page": "1541-1553",
+    "DOI": "10.1038/s41893-025-01681-y",
+    "URL": "https://doi.org/10.1038/s41893-025-01681-y"
+  }
+]

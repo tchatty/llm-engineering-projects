@@ -1,6 +1,7 @@
 import re
+import json
 
-from .config import DATA_DIR
+from .config import DATA_DIR, SOURCE_METADATA_PATH
 
 
 #Defining a function to load documents from the specified data directory
@@ -15,14 +16,87 @@ def load_documents():
         })
     return docs
 
+def load_source_metadata():
+    if not SOURCE_METADATA_PATH.exists(): 
+        raise FileNotFoundError(f"Source metadata file not found:" f"{SOURCE_METADATA_PATH}")
+    with SOURCE_METADATA_PATH.open(encoding="utf-8") as f:
+        sources = json.load(f)
+    return sources
 
-def build_source_registry(docs):
-    return {
-        doc["source"]: f"S{i}"
-        for i, doc in enumerate(
-            sorted(docs, key=lambda d: d["source"]),
-            start=1
+REQUIRED_SOURCE_FIELDS = {
+    "id", "filename", "title", "author", "issued"
+}
+
+def validate_source_metadata(sources):
+    if not isinstance(sources, list):
+        raise ValueError("Source metadata must be a json array")
+
+    source_ids = []
+    filenames = []
+    
+    for index, source in enumerate(sources, start=1):
+        missing_fields = (
+            REQUIRED_SOURCE_FIELDS - source.keys()
         )
+
+        if missing_fields:
+            raise ValueError(
+                f"Metadata record {index} is missing: "
+                f"{sorted(missing_fields)}"
+            )
+
+        if not source["id"]:
+            raise ValueError(
+                f"Metadata record {index} has no source ID."
+            )
+
+        if not source["filename"]:
+            raise ValueError(
+                f'{source["id"]} has no filename.'
+            )
+
+        if not source["title"]:
+            raise ValueError(
+                f'{source["id"]} has no paper title.'
+            )
+
+        if not isinstance(source["author"], list):
+            raise ValueError(
+                f'{source["id"]} author must be a list.'
+            )
+
+        if not source["author"]:
+            raise ValueError(
+                f'{source["id"]} has no authors.'
+            )
+
+        date_parts = (
+            source.get("issued", {})
+            .get("date-parts", [])
+        )
+
+        if not date_parts or not date_parts[0]:
+            raise ValueError(
+                f'{source["id"]} has no publication date.'
+            )
+
+        source_ids.append(source["id"])
+        filenames.append(source["filename"])
+
+    if len(source_ids) != len(set(source_ids)):
+        raise ValueError(
+            "Duplicate source IDs found in sources.json."
+        )
+
+    if len(filenames) != len(set(filenames)):
+        raise ValueError(
+            "Duplicate filenames found in sources.json."
+        )
+
+def build_source_registry(source_metadata):
+    return {
+        source["filename"] : source["id"]
+        for source in source_metadata
     }
 
 
