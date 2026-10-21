@@ -21,6 +21,7 @@ def load_source_metadata():
         raise FileNotFoundError(f"Source metadata file not found:" f"{SOURCE_METADATA_PATH}")
     with SOURCE_METADATA_PATH.open(encoding="utf-8") as f:
         sources = json.load(f)
+    validate_source_metadata(sources)
     return sources
 
 REQUIRED_SOURCE_FIELDS = {
@@ -98,6 +99,47 @@ def build_source_registry(source_metadata):
         source["filename"] : source["id"]
         for source in source_metadata
     }
+
+
+def validate_corpus_metadata(docs, metadata_by_filename):
+    doc_files = {doc["source"] for doc in docs}
+    metadata_files = set(metadata_by_filename)
+
+    missing_metadata = sorted(doc_files - metadata_files)
+    if missing_metadata:
+        raise ValueError(
+            f"Markdown documents with no metadata record: {missing_metadata}"
+        )
+
+    missing_docs = sorted(metadata_files - doc_files)
+    if missing_docs:
+        raise ValueError(
+            f"Metadata records with no Markdown document: {missing_docs}"
+        )
+
+
+def format_author_name(author):
+    return author.get("family") or author.get("literal") or ""
+
+
+def format_citation(reference):
+    #Lightweight display citation: Family (Year). Title.
+    names = [format_author_name(a) for a in reference["author"]]
+    if len(names) == 1:
+        author_text = names[0]
+    elif len(names) == 2:
+        author_text = f"{names[0]} and {names[1]}"
+    else:
+        author_text = f"{names[0]} et al."
+    year = reference["issued"]["date-parts"][0][0]
+    title = reference["title"].rstrip()
+    if title[-1] not in ".?!":
+        title += "."
+    return f"{author_text} ({year}). {title}"
+
+
+def clean_section_name(section):
+    return section.lstrip("#").strip()
 
 
 def chunk_by_section(doc, source_registry):

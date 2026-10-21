@@ -50,12 +50,14 @@ def answer_question(question, content_chunks, embeddings):
     #Step 1.2: Build Source ID mapping for the retrieved chunks
     source_map = {}
     for chunk, score in results:
-        source_id = chunk['source_id']
-        source_map[source_id] = {
+        info = source_map.setdefault(chunk['source_id'], {
             "source": chunk['source'],
             "section": chunk['section'],
-        }
-    #Future improvement, store multiple sections per source if they are retrieved, currently only the last section is stored for each source
+            "sections": [],
+        })
+        info["section"] = chunk['section']
+        if chunk['section'] not in info["sections"]:
+            info["sections"].append(chunk['section'])
 
     #Step 2: Build context from the retrieved chunks
     context = build_context(results)
