@@ -1,32 +1,26 @@
-# Placeholder Streamlit app. Run from the project root with: streamlit run app.py
+# Navigation router. Run from the project root with: uv run streamlit run app.py
 import streamlit as st
 
-from src.sustainability_rag.documents import load_documents, build_source_registry, chunk_by_section
-from src.sustainability_rag.embeddings import embed_chunks
-from src.sustainability_rag.rag_pipeline import answer_question
+st.set_page_config(page_title="Sustainability of AI", layout="wide")
 
+pages = [
+    st.Page("pages/research_assistant.py", title="Research Assistant", default=True),
+    st.Page("pages/evidence_explorer.py", title="Evidence Explorer"),
+    st.Page("pages/research_briefs.py", title="Research Briefs"),
+    st.Page("pages/knowledge_graph.py", title="Knowledge Graph"),
+    st.Page("pages/sources.py", title="Sources"),
+    st.Page("pages/impact_methodology.py", title="Impact & Methodology"),
+]
 
-@st.cache_resource
-def load_knowledge_base():
-    docs = load_documents()
-    source_registry = build_source_registry(docs)
-    all_chunks = []
-    for doc in docs:
-        all_chunks.extend(chunk_by_section(doc, source_registry))
-    content_chunks = [chunk for chunk in all_chunks if chunk["type"] == "content"]
-    embeddings = embed_chunks(content_chunks)
-    return content_chunks, embeddings
+with st.sidebar:
+    st.subheader("Resource-Aware Design")
+    st.caption("Design principles and planned capabilities; not all are implemented yet.")
+    st.markdown(
+        "- Evidence-first retrieval\n"
+        "- Reviewed research briefs\n"
+        "- Response caching\n"
+        "- Small-model defaults\n"
+        "- Impact transparency"
+    )
 
-
-st.title("Sustainability of AI - Research Assistant")
-
-content_chunks, embeddings = load_knowledge_base()
-
-question = st.text_input("Ask a question about the environmental impacts of AI")
-
-if question:
-    response = answer_question(question, content_chunks, embeddings)
-    st.write(response["answer"])
-    st.subheader("Sources Used")
-    for source_id, info in response["source_map"].items():
-        st.write(f"{source_id}: {info['source']} (Section: {info['section']})")
+st.navigation(pages).run()
