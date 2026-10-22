@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "sonnet",
+  "env": {
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
+    "MAX_THINKING_TOKENS": "4000"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(uv run python -c:*)",
+      "Bash(uv run pytest:*)"
+    ],
+    "ask": [
+      "Read(./notebooks/**)",
+      "Read(./project_plan.md)",
+      "Bash(uv add:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(uv run streamlit:*)",
+      "WebSearch",
+      "WebFetch"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(../.env)",
+      "Read(./data/pdfs/**)",
+      "Read(../.venv/**)",
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)"
+    ]
+  }
+}
