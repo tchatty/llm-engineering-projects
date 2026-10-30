@@ -1,0 +1,133 @@
+[
+  {
+    "id": "Q01",
+    "question": "How do we understand AI’s net effect on incumbent energy systems?",
+    "expected_source_ids": [
+      "S1"
+    ],
+    "expected_sections": [
+      "Reinforcement versus displacement of incumbent energy systems",
+      "Rebound and induction effects"
+    ],
+    "corpus_can_answer": true,
+    "notes": ""
+  },
+  {
+    "id": "Q02",
+    "question": "What are the limitations of existing approaches to quantify the net impacts of AI?",
+    "expected_source_ids": [
+      "S1"
+    ],
+    "expected_sections": [
+      "Gaps in existing methodological approaches"
+    ],
+    "corpus_can_answer": true,
+    "notes": ""
+  },
+  {
+    "id": "Q03",
+    "question": "Do net global emissions from AI adoption increase or decrease?",
+    "expected_source_ids": [
+      "S1",
+      "S7"
+    ],
+    "expected_sections": [
+      "Net global emissions increase under parallel adoption",
+      "Opposing trends"
+    ],
+    "corpus_can_answer": true,
+    "notes": ""
+  },
+  {
+    "id": "Q04",
+    "question": "What are the embodied emissions associated with computing equipment required to train and deploy ML models?",
+    "expected_source_ids": [
+      "S2",
+      "S4"
+    ],
+    "expected_sections": [
+      "4.1 Embodied Emissions",
+      "2.0.1 Three levels of costs: computing-related, application-related and system-level"
+    ],
+    "corpus_can_answer": true,
+    "notes": ""
+  },
+  {
+    "id": "Q05",
+    "question": "How are the emissions produced by electricity powering model training quantified?",
+    "expected_source_ids": [
+      "S2"
+    ],
+    "expected_sections": [
+      "4.2 Dynamic Power Consumption"
+    ],
+    "corpus_can_answer": true,
+    "notes": ""
+  },
+  {
+    "id": "Q06",
+    "question": "How is idle power consumption of the computing infrastructure used for training quantified?",
+    "expected_source_ids": [
+      "S2"
+    ],
+    "expected_sections": [
+      "4.3 Idle Power Consumption"
+    ],
+    "corpus_can_answer": true,
+    "notes": ""
+  },
+  {
+    "id": "Q07",
+    "question": "What is Power Usage Effectiveness (PUE)?",
+    "expected_source_ids": [
+      "S2"
+    ],
+    "expected_sections": [
+      "4.3 Idle Power Consumption"
+    ],
+    "corpus_can_answer": true,
+    "notes": ""
+  },
+  {
+    "id": "Q08",
+    "question": "How do the impacts of inference compare to model training?",
+    "expected_source_ids": [
+      "S3",
+      "S7"
+    ],
+    "expected_sections": [
+      "Training versus inference",
+      "Results (Table 5)",
+      "Areas of emerging consensus"
+    ],
+    "corpus_can_answer": true,
+    "notes": ""
+  },
+  {
+    "id": "Q09",
+    "question": "What is the variability of energy consumption across different types of inference tasks?",
+    "expected_source_ids": [
+      "S3"
+    ],
+    "expected_sections": [
+      "Energy per task (Table 2)",
+      "Variation between tasks"
+    ],
+    "corpus_can_answer": true,
+    "notes": ""
+  },
+  {
+    "id": "Q10",
+    "question": "What are the challenges to quantifying energy consumption during inference?",
+    "expected_source_ids": [
+      "S5"
+    ],
+    "expected_sections": [
+      "Why per-query energy matters",
+      "Two drivers of the discrepancy",
+      "Per-query figures cannot be interpreted in isolation"
+    ],
+    "corpus_can_answer": true,
+    "notes": ""
+  }
+]
