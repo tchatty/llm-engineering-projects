@@ -1,13 +1,6 @@
 import streamlit as st
 from src.sustainability_rag.config import EMBEDDING_MODEL_NAME
-from src.sustainability_rag.documents import (
-    build_source_registry, 
-    chunk_by_section,
-    load_documents,
-    load_source_metadata,
-    validate_corpus_metadata,    
-)
-from src.sustainability_rag.embeddings import embed_chunks
+from src.sustainability_rag.resources import initialize_corpus_resources
 from src.sustainability_rag.retrieval import search_evidence
 
 st.title("Evidence Explorer")
@@ -19,53 +12,13 @@ st.markdown(
     """
 )
 
-@st.cache_resource
-def initialize_evidence_search():
-    """
-    Load the corpus and prepare reusable retrieval resources.
-    Streamlit caches the returned resources so they are not rebuilt on every page interaction.
-    """
 
-    source_metadata = load_source_metadata()
-    metadata_by_id = {
-        source["id"]: source
-        for source in source_metadata
-    }
+resources = initialize_corpus_resources()
+source_metadata = resources["source_metadata"]
+metada_by_id = resources["metadata_by_id"]
+content_chunks = resources["content_chunks"]
+embeddings = resources["embeddings"]
 
-    metadata_by_filename = {
-        source["filename"]: source
-        for source in source_metadata
-    }
-
-    source_registry = build_source_registry(source_metadata)
-
-    docs = load_documents()
-    validate_corpus_metadata(docs, metadata_by_filename)
-
-    all_chunks = []
-    for doc in docs:
-        all_chunks.extend(
-            chunk_by_section(
-                doc, source_registry,
-            )
-        )
-
-    content_chunks = [
-        chunk
-        for chunk in all_chunks
-        if chunk["type"] == "content"
-    ]
-
-    embeddings = embed_chunks(content_chunks)
-
-    return {
-        "source_metadata": source_metadata,
-        "metadata_by_id": metadata_by_id,
-        "content_chunks": content_chunks,
-        "embeddings": embeddings,
-    }
-
-resources = initialize_evidence_search()
 
 with st.form("evidence_search_form"):
     question = st.text_input(
