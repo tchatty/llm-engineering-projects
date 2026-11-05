@@ -4,23 +4,29 @@ import streamlit as st
 st.set_page_config(page_title="Sustainability of AI", layout="wide")
 
 pages = [
-    st.Page("pages/research_assistant.py", title="Research Assistant", default=True),
-    st.Page("pages/evidence_explorer.py", title="Evidence Explorer"),
-    st.Page("pages/research_briefs.py", title="Research Briefs"),
-    st.Page("pages/knowledge_graph.py", title="Knowledge Graph"),
-    st.Page("pages/sources.py", title="Sources"),
-    st.Page("pages/impact_methodology.py", title="Impact & Methodology"),
+    st.Page("pages/home.py", title="Start Here", icon=":material/home:", default=True),
+    st.Page("pages/evidence_explorer.py", title="Evidence Explorer", icon=":material/search:"),
+    st.Page("pages/research_assistant.py", title="Research Assistant", icon=":material/psychology:"),
+    st.Page("pages/research_briefs.py", title="Research Briefs", icon=":material/article:"),
+    st.Page("pages/knowledge_graph.py", title="Knowledge Graph", icon=":material/hub:"),
+    st.Page("pages/sources.py", title="Sources", icon=":material/library_books:"),
+    st.Page("pages/impact_methodology.py", title="Impact & Methodology", icon=":material/monitoring:"),
 ]
 
 with st.sidebar:
-    st.subheader("Resource-Aware Design")
-    st.caption("Design principles and planned capabilities; not all are implemented yet.")
+    st.subheader("Evidence-First Research")
+    st.caption("Use the least resource-intensive pathway to meet your research needs.")
     st.markdown(
-        "- Evidence-first retrieval\n"
-        "- Reviewed research briefs\n"
-        "- Response caching\n"
-        "- Small-model defaults\n"
-        "- Impact transparency"
+        "1. **Retrieve** evidence\n"
+        "2. **Review** authored research\n"
+        "3. **Reuse** valid cached content\n"
+        "4. **Generate** only when useful\n"
+        "5. **Measure and disclose** supported impacts"
     )
+
+st.divider()
+
+st.caption("Environmental-impact accounting is under development. "
+        "No application-lifetime impact totals are currently reported.")
 
 st.navigation(pages).run()
