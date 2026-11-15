@@ -51,4 +51,5 @@ dependencies = [
     "groq>=0.33.0",
     "xgboost>=3.1.1",
     "streamlit>=1.60.0",
+    "codecarbon>=3.3.2",
 ]
