@@ -38,6 +38,21 @@ class SummaryTests(unittest.TestCase):
             self.assertEqual(out["statistics"]["gpu_energy"]["n"], 1)
 
 
+class SharedCacheTests(unittest.TestCase):
+    def test_second_call_reuses_cached_embeddings(self):
+        from unittest import mock
+        import numpy as np
+        import sustainability_rag.resources as r
+        r.initialize_corpus_resources.clear()
+        with mock.patch.object(r, "embed_chunks", return_value=np.zeros((1, 384))) as embed:
+            first = r.initialize_corpus_resources()
+            self.assertEqual(embed.call_count, 1)
+            second = r.initialize_corpus_resources()
+            self.assertEqual(embed.call_count, 1)
+            self.assertIs(first, second)
+        r.initialize_corpus_resources.clear()
+
+
 class CliTests(unittest.TestCase):
     def test_defaults(self):
         a = m.parse_args(["retrieval"])

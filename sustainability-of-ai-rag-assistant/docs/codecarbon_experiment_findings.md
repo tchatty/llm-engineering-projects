@@ -305,3 +305,111 @@ The experiment supports the following practices:
 - combined local-plus-remote impact totals.
 
 **Next review trigger:** completion of the 3,000-operation machine/process comparison and deterministic shared-cache verification.
+
+## Follow-up Attribution and Convergence Validation
+
+Generated results are ignored by Git under `evaluation/impact_results/codecarbon/attribution_validation/` (per-repetition manifests and native `emissions.csv`; `summary.csv`, `summary.json`, `attribution_analysis.json`). Manifests were joined to native rows with `manifest.codecarbon_run_id = emissions.run_id`. Energy is in kWh, emissions in kg CO2eq.
+
+### Follow-up configuration (Observed)
+
+- 3,000 measured retrievals per repetition; 3 repetitions each for `tracking_mode=machine` and `process`, run alternately.
+- `measure_power_secs=15`; 10 unmeasured warm-up retrievals before each batch; Top-K 5; existing corpus, embedding model, and reviewed questions.
+- Validation before measurement: syntax checks and 6 unit tests passed; Hit@5 = 8/10 (unchanged); chunk count 253 and embedding dimensions 384 (enforced by the harness in every run).
+- Code changes: summarizer joins on `run_id`, splits groups by tracking mode, and adds `--attribution` analysis; one cache test added. No production module changed.
+
+### Cache-check result (Observed)
+
+Pass. First `initialize_corpus_resources()` call: `embed_chunks` call count 1. Second call in the same process: count still 1, and the same cached object was returned. Avoided energy was not calculated.
+
+### Machine-mode results (Observed; n=3, 0 failed, 0 missing)
+
+| Metric | Min | Max | Median | Mean | SD | CV |
+|---|---:|---:|---:|---:|---:|---:|
+| Workload duration (s) | 30.5 | 54.9 | 33.2 | 39.5 | 13.4 | 33.8% |
+| Tracker duration (s) | 33.7 | 58.1 | 36.3 | 42.7 | 13.4 | 31.3% |
+| Total energy (kWh) | 4.63e-4 | 6.31e-4 | 5.24e-4 | 5.39e-4 | 8.50e-5 | 15.8% |
+| CPU energy (kWh) | 2.62e-4 | 3.08e-4 | 2.72e-4 | 2.81e-4 | 2.42e-5 | 8.6% |
+| GPU energy (kWh) | 3.06e-5 | 5.31e-5 | 3.13e-5 | 3.83e-5 | 1.28e-5 | 33.3% |
+| RAM energy (kWh) | 1.70e-4 | 3.05e-4 | 1.84e-4 | 2.20e-4 | 7.43e-5 | 33.8% |
+| Emissions (kg) | 9.86e-5 | 1.35e-4 | 1.12e-4 | 1.15e-4 | 1.81e-5 | 15.8% |
+
+### Process-mode results (Observed; n=3, 0 failed, 0 missing)
+
+| Metric | Min | Max | Median | Mean | SD | CV |
+|---|---:|---:|---:|---:|---:|---:|
+| Workload duration (s) | 36.4 | 83.8 | 45.4 | 55.2 | 25.2 | 45.6% |
+| Tracker duration (s) | 39.7 | 87.0 | 48.6 | 58.4 | 25.1 | 43.0% |
+| Total energy (kWh) | 3.18e-4 | 7.31e-4 | 4.35e-4 | 4.95e-4 | 2.13e-4 | 43.0% |
+| CPU energy (kWh) | 1.82e-4 | 4.18e-4 | 2.65e-4 | 2.88e-4 | 1.20e-4 | 41.5% |
+| GPU energy (kWh) | 3.49e-5 | 8.07e-5 | 4.44e-5 | 5.33e-5 | 2.41e-5 | 45.3% |
+| RAM energy (kWh) | 1.01e-4 | 2.32e-4 | 1.26e-4 | 1.53e-4 | 6.97e-5 | 45.6% |
+| Emissions (kg) | 6.78e-5 | 1.56e-4 | 9.28e-5 | 1.05e-4 | 4.54e-5 | 43.0% |
+
+Pre-run conditions: CPU 21.8–43.7%, 391–408 processes (machine: 25.5–43.7%, 391–408; process: 21.8–33.3%, 391–403).
+
+### Derived per-retrieval ranges
+
+**DERIVED BATCH ALLOCATION — NOT DIRECTLY MEASURED** (batch value ÷ 3,000 completed retrievals; mWh).
+
+| Component | Machine range (mean, CV) | Process range (mean, CV) |
+|---|---|---|
+| Total | 0.154–0.210 (0.180, 15.8%) | 0.106–0.244 (0.165, 43.0%) |
+| CPU | 0.087–0.103 (0.094, 8.6%) | 0.061–0.139 (0.096, 41.5%) |
+| GPU | 0.010–0.018 (0.013, 33.3%) | 0.012–0.027 (0.018, 45.3%) |
+| RAM | 0.057–0.102 (0.073, 33.8%) | 0.034–0.077 (0.051, 45.6%) |
+| Emissions (µg CO2eq) | 32.9–44.8 (38.3) | 22.6–52.0 (35.2) |
+
+### Mode comparison (Derived)
+
+- Total energy: process − machine = −4.4e-5 kWh; ratio of means 0.918; ranges overlap; CV difference +27.3 points.
+- CPU ratio 1.03, GPU ratio 1.39, RAM ratio 0.70; all component ranges overlap.
+- Workload duration ratio 1.40 (process slower on average); ranges overlap.
+- Component coverage: CPU, GPU, RAM, total, and emissions present in 6/6 repetitions; missing-value counts 0 in both modes; no difference in coverage.
+
+### Evidence for or against convergence (Observed/Derived)
+
+- Against: identical work took 30.5–83.8 s across repetitions, and energy tracked duration. Machine CV for total energy was 15.8% (similar to the earlier 18.5% at 1,000 operations); process CV was 43.0%. With n=3 these CVs are imprecise.
+- For: machine-mode CPU energy was comparatively stable (CV 8.6%). Total-energy ranges overlapped between modes.
+- Workload length: shortest run 30.5 s (about 2 sampling intervals); the 3,000-operation batches spanned roughly 2–5.6 intervals. All exceeded 15 s.
+- Interpretation: no convergence is demonstrated for process mode; machine mode is no more convergent than the 1,000-operation batches. Process-mode values being lower on average is not evidence of better attribution, since the ranges overlap and process mode was more variable.
+
+### Warnings and deviations
+
+- No CodeCarbon or Python warnings were captured in any manifest (including no multiple-instance message).
+- Deviation: the working tree was not clean at measurement time because the summarizer and test edits were uncommitted. All six manifests record `dirty=true` against commit `99b2bfc`. `measure_local_compute.py` was unchanged, so the measured code path is the committed one. Nothing was committed, as instructed.
+- Run order alternated by mode, so system drift is shared but not controlled. The unequal workload durations suggest uncontrolled background or power-state variation.
+- RAM remains modeled, so all totals remain partially measured.
+
+### Questions answered
+
+1. Process tracking did not demonstrably improve attribution: energy was lower on average, but ranges overlapped and variability was larger.
+2. Batch-derived values did not converge in process mode and only moderately in machine mode (n=3).
+3. The 3,000-operation workload was long enough to span at least two sampling intervals in every run.
+4. Component coverage did not differ between modes.
+5. The shared cache prevented a second `embed_chunks()` call in the deterministic test.
+
+### Unresolved questions
+
+- What causes the 2.7× spread in duration for identical work?
+- Does process mode capture only process CPU while GPU and RAM remain system-level? That was not checked here.
+- Would more repetitions or controlled background load narrow the ranges?
+- What range width is acceptable for disclosure? No threshold was applied.
+
+### Updated suitability matrix
+
+| Intended use | Status | Basis |
+|---|---|---|
+| Internal cold-start comparisons | Unchanged: suitable with qualifications | Not retested. |
+| Internal retrieval-batch comparisons | Promising; machine mode more repeatable than process mode | CV 15.8% vs 43.0%, n=3. |
+| Shared-cache design justification | Deterministically verified; energy avoided still not measured | Call count 1 → 1. |
+| Per-query user disclosure | Not yet supported | Process-mode attribution unproven; wide ranges. |
+| Lifetime retrieval aggregation | Not yet supported | Same. |
+| Production frontend integration | Not assessed | No decision made. |
+
+### Human decision required
+
+1. Accept machine-mode batch ranges as an internal diagnostic only.
+2. Run a larger or controlled follow-up (more repetitions, a quiesced machine, a clean committed tree).
+3. Investigate what process mode attributes per component before any attribution claim.
+4. Set an explicit variability criterion for disclosure.
+5. Defer disclosure until one of the above is complete.
