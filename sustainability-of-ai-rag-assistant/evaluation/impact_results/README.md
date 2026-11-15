@@ -15,3 +15,16 @@ Commands (run from `sustainability-of-ai-rag-assistant/`, one repetition per pro
     uv run python evaluation/measure_local_compute.py coldstart --repetition 1
     uv run python evaluation/measure_local_compute.py retrieval --operations 100 --repetition 1
     uv run python evaluation/summarize_codecarbon_results.py
+
+## EcoLogits (remote inference)
+
+Results live in `ecologits/<experiment_id>/` (sanitized `manifest.json`; local-only `native_impacts.json`) and are excluded
+from source control. `ecologits/summary.json` / `summary.csv` hold descriptive statistics. Bounds are kept separate; no midpoints.
+Values are modeled estimates, not measured provider energy. Do not add them to CodeCarbon values.
+
+Commands that INCUR OPENAI COST (require `--confirm-paid`):
+
+    uv run python evaluation/run_ecologits_experiment.py compat --confirm-paid
+    uv run python evaluation/run_ecologits_experiment.py rag --confirm-paid
+
+Free: `uv run python evaluation/summarize_ecologits_results.py`

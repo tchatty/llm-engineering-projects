@@ -52,4 +52,5 @@ dependencies = [
     "xgboost>=3.1.1",
     "streamlit>=1.60.0",
     "codecarbon>=3.3.2",
+    "ecologits[openai]>=0.11.3",
 ]
