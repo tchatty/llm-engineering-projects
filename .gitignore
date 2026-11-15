@@ -221,3 +221,7 @@ __marimo__/
 
 # Architecture text file
 sustainability_architecture_review.txt
+
+# CodeCarbon generated results (README stays committed)
+sustainability-of-ai-rag-assistant/evaluation/impact_results/codecarbon/*
+!sustainability-of-ai-rag-assistant/evaluation/impact_results/codecarbon/README.md
