@@ -79,6 +79,37 @@ class RecordTests(unittest.TestCase):
         self.assertEqual(r.main(["compat"]), 2)  # refuses without --confirm-paid
 
 
+def fake_gemini(impacts=True, finish="STOP", model="gemini-2.5-flash-lite"):
+    resp = SimpleNamespace(
+        model_version=model, candidates=[SimpleNamespace(finish_reason=SimpleNamespace(name=finish))],
+        usage_metadata=SimpleNamespace(prompt_token_count=900, candidates_token_count=80,
+                                       cached_content_token_count=None, thoughts_token_count=None), text="SECRET TEXT")
+    if impacts:
+        resp.impacts = _Impacts()
+    return resp
+
+
+class GeminiRecordTests(unittest.TestCase):
+    def test_gemini_record_sanitized_and_missing_not_zero(self):
+        rec, native = r.build_record("rag_100", 100, "gemini-2.5-flash-lite", 1, fake_gemini(), 1.0,
+                                     provider="google_genai")
+        self.assertEqual((rec["provider"], rec["status"], rec["input_tokens"], rec["output_tokens"]),
+                         ("google_genai", "success", 900, 80))
+        self.assertIsNone(rec["cached_input_tokens"])
+        self.assertIsNone(rec["estimated_cost_usd"])
+        self.assertNotIn("SECRET TEXT", json.dumps(rec))
+        self.assertIs(native, IMPACTS)
+
+    def test_gemini_limit_unsupported_and_cli(self):
+        rec, _ = r.build_record("c", 50, "m", 1, fake_gemini(finish="MAX_TOKENS"), 1.0, provider="google_genai")
+        self.assertTrue(rec["reached_output_limit"])
+        rec, _ = r.build_record("c", 50, "m", 1, fake_gemini(impacts=False), 1.0, provider="google_genai")
+        self.assertEqual(rec["status"], "unsupported")
+        a = r.parse_args(["compat", "--provider", "google_genai"])
+        self.assertEqual((a.model, a.results_dir.name), ("gemini-2.5-flash-lite", "gemini"))
+        self.assertEqual(r.main(["compat", "--provider", "google_genai"]), 2)  # refuses without confirmation
+
+
 class SummaryTests(unittest.TestCase):
     def test_bounds_separate_and_counts(self):
         with tempfile.TemporaryDirectory() as tmp:

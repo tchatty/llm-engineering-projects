@@ -6,11 +6,14 @@ SOURCE_METADATA_PATH = Path(__file__).resolve().parents[2] / "data" / "metadata"
 TOP_K = 5
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
 
-#Active Model Configuration
-PROVIDER = "openai"  # Change this to "anthropic", "openrouter", or "ollama" as needed
+# Provider configuration (single source of truth)
+DEFAULT_PROVIDER = "gemini"   # Used for every request unless a provider is passed explicitly
+FALLBACK_PROVIDER = "openai"  # Never called automatically; only after explicit user confirmation
 MODELS = {
-    "openai": "gpt-4.1-mini",
+    "gemini": "gemini-3.5-flash-lite",  # validated free-tier model (see docs/ecologits_gemini_experiment_findings.md)
+    "openai": "gpt-4o-mini",            # cheapest OpenAI model validated with EcoLogits
     "anthropic": "claude-sonnet-5-5",
     "openrouter": "openrouter/free",
-    "ollama": "llama3.2"
+    "ollama": "llama3.2",
 }
+MAX_OUTPUT_TOKENS = 500

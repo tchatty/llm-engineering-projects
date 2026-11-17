@@ -238,8 +238,9 @@ Current defaults:
 ```text
 Embedding model: all-MiniLM-L6-v2
 Top-K retrieval: 5
-Default provider: OpenAI
-Default model: gpt-4.1-mini
+Default provider: Gemini (free tier)
+Default model: gemini-3.5-flash-lite
+Optional fallback: OpenAI gpt-4o-mini, only after explicit user confirmation
 Temperature: 0
 Maximum response tokens: 500
 ```
@@ -252,15 +253,22 @@ src/sustainability_rag/config.py
 
 API credentials are loaded from a local `.env` file.
 
-Potential variables include:
+Potential variables include (see `.env.example`):
 
 ```text
+GEMINI_API_KEY
 OPENAI_API_KEY
 ANTHROPIC_API_KEY
 OPENROUTER_API_KEY
 ```
 
 The `.env` file must not be committed to version control.
+
+If Gemini is unavailable (missing credential, quota, or provider failure), the Research Assistant opens a dialog.
+Evidence Explorer stays available, and OpenAI is called only if the user clicks "Generate once with OpenAI".
+Gemini free-tier requests should contain only public, non-sensitive information; free-tier content may be used by
+Google to improve its products. Rate limiting has an extension point (`check_rate_limit` in `rag_pipeline.py`).
+Evidence and findings: `docs/ecologits_gemini_experiment_findings.md`.
 
 ## Running the Project
 
