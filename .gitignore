@@ -229,3 +229,6 @@ sustainability-of-ai-rag-assistant/evaluation/impact_results/codecarbon/*
 # EcoLogits generated results (README stays committed)
 sustainability-of-ai-rag-assistant/evaluation/impact_results/ecologits/*
 !sustainability-of-ai-rag-assistant/evaluation/impact_results/ecologits/README.md
+
+# Provider-health runtime state (created at runtime)
+sustainability-of-ai-rag-assistant/evaluation/provider_health_state.json*

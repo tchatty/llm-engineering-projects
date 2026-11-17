@@ -5,22 +5,35 @@
 
 import uuid
 
+from . import provider_health
 from .config import FALLBACK_PROVIDER
 from .rag_pipeline import GenerationUnavailable, answer_question
 
 UNAVAILABLE_MESSAGE = "Live synthesis is currently unavailable. Evidence Explorer remains available."
 
 
-def run_primary(state, question, content_chunks, embeddings):
+def run_primary(state, question, content_chunks, embeddings, now=None):
     """Answer with the default provider. Returns the response, or None when unavailable (sets pending fallback)."""
     cached = state.get("answer")
     if cached and cached["question"] == question:
         return cached["response"]
     if state.get("failed_question") == question:
         return None  # do not re-call the provider on every rerun
-    try:
-        response = answer_question(question, content_chunks, embeddings)
-    except GenerationUnavailable:
+    health = provider_health.load()
+    if provider_health.may_attempt(health, now):
+        try:
+            response = answer_question(question, content_chunks, embeddings)
+        except GenerationUnavailable as exc:
+            provider_health.record_outcome(health, exc.category, now)  # None: never reached Gemini, not counted
+            provider_health.save(health)
+            response = None
+        else:
+            provider_health.record_outcome(health, "success", now)
+            provider_health.save(health)
+    else:  # circuit open: skip Gemini, never call OpenAI
+        provider_health.save(health)
+        response = None
+    if response is None:
         state["failed_question"] = question
         state["pending_fallback"] = {"id": uuid.uuid4().hex, "question": question}
         return None

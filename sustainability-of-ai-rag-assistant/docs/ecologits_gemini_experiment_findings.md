@@ -259,3 +259,13 @@ After 50 eligible Gemini attempts:
 - no paid-provider default change occurs silently.
 
 This decision balances provider cost, application reliability, user consent, and the project's objective of making AI impacts visible.
+## Provider reliability (development decision support)
+
+Implemented in `src/sustainability_rag/provider_health.py`; no UI. It stores only counters, timestamps and a failure category, never request text, credentials, exception messages or user identifiers. Read a snapshot with `uv run python -m sustainability_rag.provider_health` (from `src/`) or `provider_health.developer_review()`.
+
+- **Eligible attempt:** one final outcome per user request submitted to Gemini by the Research Assistant. Success means a nonempty Gemini response without needing the fallback.
+- **Retryable failures:** HTTP 408, 429, 500, 502, 503, 504 and network timeouts. Any other failure that reached Gemini (including an empty response) is nonretryable. No retry loop was added; failures are recorded and not retried automatically.
+- **Circuit rule:** one retryable failure leaves the circuit closed. Two retryable failures within five minutes open it for ten minutes. While open, Gemini is skipped and the existing availability dialog is used. After ten minutes one half-open probe is allowed: success closes the circuit and clears consecutive failures, and a failed probe (retryable or nonretryable) reopens it for ten minutes without any automatic retry. A missing credential never reaches Gemini, is not counted, and leaves the circuit open for the next probe. Opening the circuit never calls OpenAI.
+- **Excluded events:** cached responses, retries within a request, mocked or synthetic tests, cancelled or blocked requests, missing local credentials, Evidence Explorer activity, requests skipped by an open circuit, and OpenAI fallback requests.
+- **Review rule:** at least 50 eligible attempts. At a success rate of 0.90 or higher (unrounded) the recommendation is Gemini; below 0.90 it is OpenAI; with fewer than 50 attempts Gemini is kept and the review is marked not ready. This is a recommendation for human review only. It never edits `config.py`, switches the provider or calls OpenAI; **a human must approve any default change.**
+- **Persistence:** `evaluation/provider_health_state.json` (git-ignored, created at runtime, written through a temporary file and atomically replaced). A missing or malformed file counts as empty state. Ephemeral deployment filesystems may reset it, which restarts the 50-attempt count. Concurrent app processes may overwrite each other's counts (no locking).

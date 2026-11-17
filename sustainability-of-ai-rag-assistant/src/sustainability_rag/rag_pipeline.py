@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 from .config import DEFAULT_PROVIDER, MAX_OUTPUT_TOKENS, MODELS, TOP_K
+from .provider_health import classify_failure
 from .retrieval import retrieve_relevant_chunks, build_context
 
 #Load environment variables from .env file
@@ -26,7 +27,14 @@ client = clients["openai"]  # used by the EcoLogits experiment harness
 
 
 class GenerationUnavailable(Exception):
-    """Generation cannot proceed (credential, quota, availability). Carries no provider internals."""
+    """Generation cannot proceed (credential, quota, availability). Carries no provider internals.
+
+    category: 'retryable' / 'nonretryable' for a request that reached Gemini; None when it never did.
+    """
+
+    def __init__(self, provider="", category=None):
+        super().__init__(provider)
+        self.category = category
 
 
 def check_rate_limit(provider):
@@ -62,10 +70,10 @@ def generate_text(provider, messages):
         text = _generate_gemini(messages) if provider == "gemini" else _generate_chat(provider, messages)
     except GenerationUnavailable:
         raise
-    except Exception:
-        raise GenerationUnavailable(provider) from None
+    except Exception as exc:
+        raise GenerationUnavailable(provider, classify_failure(exc) if provider == "gemini" else None) from None
     if not text or not text.strip():
-        raise GenerationUnavailable(provider)
+        raise GenerationUnavailable(provider, "nonretryable" if provider == "gemini" else None)
     return text.strip()
 
 SYSTEM_PROMPT = """You are a helpful research assistant specializing in the environmental impacts of artificial intelligence.
