@@ -225,3 +225,7 @@ sustainability_architecture_review.txt
 # CodeCarbon generated results (README stays committed)
 sustainability-of-ai-rag-assistant/evaluation/impact_results/codecarbon/*
 !sustainability-of-ai-rag-assistant/evaluation/impact_results/codecarbon/README.md
+
+# EcoLogits generated results (README stays committed)
+sustainability-of-ai-rag-assistant/evaluation/impact_results/ecologits/*
+!sustainability-of-ai-rag-assistant/evaluation/impact_results/ecologits/README.md
